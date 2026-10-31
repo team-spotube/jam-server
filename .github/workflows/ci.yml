@@ -28,15 +28,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm run license:check
-      - run: npm run typecheck
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm license:check
+      - run: pnpm typecheck
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: src-go/go.mod
+          cache-dependency-path: src-go/go.sum
+      - run: pnpm go:lint
+      - run: pnpm go:test
+      - name: Smoke test the self-hosted server
+        run: |
+          (cd src-go && go build -o spotube-jamd . && JAM_DB=$RUNNER_TEMP/jam.db ./spotube-jamd > ../jamd.log 2>&1 &)
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8787/v1/health > /dev/null && break; sleep 1; done
+          pnpm test || (cat jamd.log; exit 1)
+          pkill spotube-jamd
       - name: Smoke test against a local server
         run: |
-          npx wrangler dev --port 8787 > wrangler.log 2>&1 &
+          pnpm exec wrangler dev --port 8787 > wrangler.log 2>&1 &
           for i in $(seq 1 60); do curl -sf http://127.0.0.1:8787/v1/health > /dev/null && break; sleep 1; done
-          npm test || (cat wrangler.log; exit 1)
+          pnpm test || (cat wrangler.log; exit 1)

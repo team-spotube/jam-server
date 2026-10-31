@@ -41,6 +41,7 @@ const STYLE_BY_EXTENSION = {
   ".js": STYLES.block,
   ".mjs": STYLES.block,
   ".jsonc": STYLES.block,
+  ".go": STYLES.block,
   ".yml": STYLES.hash,
   ".yaml": STYLES.hash,
 };
@@ -69,7 +70,7 @@ if (args[0] === "--check") {
   const missing = tracked.filter(applies).filter((file) => !hasHeader(readFileSync(file, "utf8")));
   for (const file of missing) console.error(`missing license header: ${file}`);
   if (missing.length) {
-    console.error("Run `npm run license:fix` to add it.");
+    console.error("Run `pnpm license:fix` to add it.");
     process.exit(1);
   }
 } else if (args[0] === "--fix") {

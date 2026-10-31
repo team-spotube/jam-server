@@ -18,14 +18,14 @@ belongs there first.
 Needs Node.js 22 or later and git.
 
 ```sh
-npm install      # dependencies, plus the git hooks (lefthook)
-npm run dev      # local server on http://127.0.0.1:8787, no Cloudflare account needed
-npm test         # in another terminal: end-to-end checks against the dev server
+pnpm install      # dependencies, plus the git hooks (lefthook)
+pnpm dev      # local server on http://127.0.0.1:8787, no Cloudflare account needed
+pnpm test         # in another terminal: end-to-end checks against the dev server
 ```
 
-`npm install` sets up a pre-commit hook that adds the license header to new files and
-typechecks. If hooks didn't install (for example, you ran `npm install` before
-`git init`), run `npx lefthook install`.
+`pnpm install` sets up a pre-commit hook that adds the license header to new files and
+typechecks. If hooks didn't install (for example, you ran `pnpm install` before
+`git init`), run `pnpm exec lefthook install`.
 
 ## Making a change
 
@@ -45,9 +45,9 @@ typechecks. If hooks didn't install (for example, you ran `npm install` before
 4. Check everything passes:
 
    ```sh
-   npm run typecheck
-   npm run license:check
-   npm test          # with `npm run dev` running
+   pnpm typecheck
+   pnpm license:check
+   pnpm test          # with `pnpm dev` running
    ```
 
 5. Open a pull request using the template.
@@ -64,11 +64,11 @@ The wire protocol is shared with the app (`core/jam/JamRoomClient.kt` in Spotube
 
 ## Style
 
-- TypeScript in strict mode; `npm run typecheck` must pass.
+- TypeScript in strict mode; `pnpm typecheck` must pass.
 - 2-space indentation (see `.editorconfig`).
 - Comment the why, not the what, and keep comments short.
 - Every source file starts with the AGPL header from `.github/agpl_header.txt`. The hook
-  adds it; `npm run license:fix` adds it to every tracked file.
+  adds it; `pnpm license:fix` adds it to every tracked file.
 
 ## Commit messages
 

@@ -18,11 +18,11 @@ pre-commit:
   commands:
     # Every source file carries the AGPL header (.github/agpl_header.txt).
     agpl-headers:
-      glob: "*.{ts,mts,js,mjs,jsonc,yml,yaml}"
+      glob: "*.{ts,mts,js,mjs,jsonc,yml,yaml,go}"
       exclude:
         - worker-configuration.d.ts
       run: node scripts/license-header.mjs {staged_files}
       stage_fixed: true
     typecheck:
       glob: "*.{ts,jsonc}"
-      run: npx tsc --noEmit
+      run: pnpm exec tsc --noEmit

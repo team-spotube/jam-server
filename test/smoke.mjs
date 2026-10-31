@@ -15,8 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-// End-to-end smoke test against a running server: `npm run dev`, then `npm test`.
-// Point it elsewhere with JAM_URL=https://spotube-jam.<account>.workers.dev npm test
+// End-to-end smoke test against a running server: `pnpm dev`, then `pnpm test`.
+// Point it elsewhere with JAM_URL=https://spotube-jam.<account>.workers.dev pnpm test
 import assert from "node:assert/strict";
 
 const BASE = process.env.JAM_URL ?? "http://127.0.0.1:8787";
