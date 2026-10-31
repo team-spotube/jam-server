@@ -1,0 +1,58 @@
+# Copyright (C) 2026 Kingkor Roy Tirtho and Spotube Contributors
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+name: Bug report
+description: Something on the room server doesn't work as it should
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For security problems, don't open an issue: see SECURITY.md.
+        For problems in the app itself (UI, playback), use the Spotube repository.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Create a room on …
+        2. Join from a second device …
+    validations:
+      required: true
+  - type: input
+    id: server
+    attributes:
+      label: Server
+      description: Spotube's public server, or your own deployment (and its commit)?
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: Spotube version and platform
+      placeholder: e.g. 5.0.0 on Android 16
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant `wrangler tail` or app logs. Remove room codes and names.
+      render: text
