@@ -103,16 +103,45 @@ Known limits:
   usage. Set a usage alert in the Cloudflare dashboard. The free plan just stops at its
   daily limit (00:00 UTC reset) instead of billing.
 
+## Self-host
+
+[`src-go/`](src-go) is the same server as a single Go binary with SQLite instead of
+Durable Objects, for running on your own VM. It speaks the same protocol (the smoke test
+passes against both), so Spotube only needs its URL in Settings → Jam → Server URL.
+
+```sh
+pnpm go:build                  # builds bin/spotube-jamd
+JAM_ADDR=:8787 JAM_DB=/var/lib/jam/jam.db bin/spotube-jamd
+# or run without building: pnpm go:run (keeps its database in .data/)
+# or: pnpm go:docker && docker run -p 8787:8787 -v jam:/data spotube-jamd
+```
+
+| Variable        | Default   | Meaning                                                                 |
+| --------------- | --------- | ----------------------------------------------------------------------- |
+| `JAM_ADDR`      | `:8787`   | Listen address.                                                         |
+| `JAM_DB`        | `jam.db`  | SQLite file (queues, members, bans; kept across restarts).              |
+| `JAM_IP_HEADER` | unset     | Header carrying the client IP behind a proxy (`X-Forwarded-For`, …).    |
+
+Notes:
+
+- Phones need HTTPS: put it behind a reverse proxy that terminates TLS and forwards
+  WebSocket upgrades (Caddy and nginx both do). Set `JAM_IP_HEADER` only if the proxy
+  overwrites that header, otherwise clients can spoof their IP and dodge the rate limit
+  and device bans.
+- It is one process: rooms live in its memory and aren't shared between instances.
+- The connect rate limit (60 per minute per IP) is exact here, not per location.
+
 ## Develop
 
 Needs Node.js 22 or later. No Cloudflare account is needed: `wrangler dev` runs the
 Worker and its Durable Objects locally.
 
 ```sh
-npm install          # also installs the git hooks (lefthook)
-npm run dev          # http://127.0.0.1:8787
-npm test             # smoke test against the dev server (another terminal)
-npm run typecheck
+pnpm install          # also installs the git hooks (lefthook)
+pnpm dev          # http://127.0.0.1:8787
+pnpm test             # smoke test against the dev server (another terminal)
+pnpm typecheck
+pnpm go:test        # the self-hosted server (also go:run, go:build, go:lint, go:fmt, go:docker)
 ```
 
 To run Spotube's own end-to-end tests against it (sync simulation, network loss), run
@@ -124,14 +153,14 @@ JAM_TEST_URL=http://127.0.0.1:8787 ./gradlew :composeApp:jvmTest --tests 'org.sp
 
 To try the real app against it, enter `http://127.0.0.1:8787` in Spotube → Settings →
 Jam → Server URL. Phones need HTTPS: expose the dev server with
-`npx cloudflared tunnel --url http://localhost:8787` and use the URL it prints.
+`pnpm dlx cloudflared tunnel --url http://localhost:8787` and use the URL it prints.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
 ## Deploy
 
 ```sh
-CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... npx wrangler deploy
+CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... pnpm exec wrangler deploy
 ```
 
 The token needs the "Edit Cloudflare Workers" permissions. Durable Objects on the

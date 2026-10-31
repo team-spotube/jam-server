@@ -36,17 +36,18 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm run typecheck
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
       - name: Deploy
-        run: npx wrangler deploy
+        run: pnpm exec wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       - name: Smoke test the deployment
         if: ${{ vars.JAM_SERVER_URL != '' }}
-        run: JAM_URL="${{ vars.JAM_SERVER_URL }}" npm test
+        run: JAM_URL="${{ vars.JAM_SERVER_URL }}" pnpm test
