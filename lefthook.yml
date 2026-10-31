@@ -21,6 +21,7 @@ pre-commit:
       glob: "*.{ts,mts,js,mjs,jsonc,yml,yaml,go}"
       exclude:
         - worker-configuration.d.ts
+        - pnpm-lock.yaml
       run: node scripts/license-header.mjs {staged_files}
       stage_fixed: true
     typecheck:
