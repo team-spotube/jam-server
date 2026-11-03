@@ -163,17 +163,18 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... pnpm exec wrangler deploy
 ```
 
-The token needs the "Edit Cloudflare Workers" permissions. Durable Objects on the
+The token needs the "Edit Cloudflare Workers" permissions, plus DNS edit on the
+`spotube.cc` zone for the `jam.spotube.cc` custom domain. Durable Objects on the
 SQLite backend work on the free plan.
 
-`.github/workflows/deploy.yml` deploys every push to `main` (it runs in the `production`
-environment, so you can require approval there). It needs the repository secrets
-`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`; the optional variable `JAM_SERVER_URL`
-runs the smoke test against the deployment afterwards.
+Production deploys every push to `main` through Cloudflare Workers Builds (the repo is
+connected under the Worker's Settings → Builds). Smoke test a deployment with
+`JAM_URL=https://jam.spotube.cc pnpm test`.
 
 ## Self-host
 
-Deploy to your own Cloudflare account as above, then enter the Worker's URL in
+Remove the `routes` entry from `wrangler.jsonc` (or point it at your own domain),
+deploy to your own Cloudflare account as above, then enter the Worker's URL in
 Spotube → Settings → Jam → Server URL.
 
 ## Limits

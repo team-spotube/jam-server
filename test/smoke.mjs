@@ -16,7 +16,7 @@
  */
 
 // End-to-end smoke test against a running server: `pnpm dev`, then `pnpm test`.
-// Point it elsewhere with JAM_URL=https://spotube-jam.<account>.workers.dev pnpm test
+// Point it elsewhere with JAM_URL=https://jam.spotube.cc pnpm test
 import assert from "node:assert/strict";
 
 const BASE = process.env.JAM_URL ?? "http://127.0.0.1:8787";
